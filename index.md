@@ -1,5 +1,5 @@
-Here you can say lots of fun things about your site.
+I've recently ventured into the field of cybersecurity and am starting my first blog.
 
-Maybe say a some things about yourself.
+Although I am a beginner to it all, I enjoy web app pentesting, CTFs, and learning about current cybersecurity news. 
 
-Or maybe what you plan to blog about.
+Here I'll blog completed labs, CTFs, boxes, or any projects that peak my interests in the field of cybersecurity or programming.

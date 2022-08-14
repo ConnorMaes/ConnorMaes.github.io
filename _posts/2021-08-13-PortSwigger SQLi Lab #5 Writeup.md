@@ -23,7 +23,8 @@ Each payload will be entered right after the "gifts" part of the URL, as the cat
 
 <br>
 
-# 
+<br> 
+
 ### **1. Determine the number of columns with the following iterative payload process.**
 
 
@@ -55,7 +56,7 @@ Because this was solved iteratively, the amount of columns is: 3 - 1 = 2.
 
 <br>
 
-#
+<br>
 
 ### **2. Determine the data types of the columns.**
 
@@ -75,7 +76,7 @@ Due to the 200 status code, both of the columns are strings. If there were an er
 
 <br>
 
-#
+<br>
 
 ### **3. Find the the type and version of the database.**
 
@@ -113,7 +114,7 @@ x86_64-pc-linux-gnu, compiled by gcc
 
 <br>
 
-#
+<br>
 
 ### **4. Now that the database type is known, find the table names within the database.**
 
@@ -147,7 +148,7 @@ users
 
 <br>
 
-#
+<br>
 
 ### **5. Find the column names of the table name 'users'.**
 
@@ -169,7 +170,7 @@ Two of the columns in the response are named 'password' and 'username'.
 
 <br>
 
-#
+<br>
 
 ### **6. Now that the table and columns are known, call them using a simple 'UNION select' injection.**
 
@@ -197,7 +198,7 @@ administrator
 
 <br>
 
-#
+<br>
 
 ### **7. Return to the login page of the vulnerable website and login with the administrator's username and password.**
 

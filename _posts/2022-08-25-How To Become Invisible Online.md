@@ -4,7 +4,7 @@
 
 <br> 
 
-To keep your data private when browsing the web, there are many different techniques and programs that you can use. However, you'll notice that the more private and anonymous you become, the less convenient it will be for you to browse without your data being leaked. Convenience has always been the opposition of security. The more secure you become, the less convenient it is to go about normal tasks. For instance, the most secure computer is one that is powered off, disconnected from any internet connection, and stored 100 feet underground, but that would make it *pretty* difficult to download files.  
+There are many different techniques and programs that you can use to keep your data private when browsing the web. However, you'll notice that the more private and anonymous you become, the less convenient it will be for you to browse without your data being leaked. Convenience has always been the opposition of security. The more secure you become, the less convenient it is to go about normal tasks. For instance, the most secure computer is one that is powered off, disconnected from any internet connection, and stored 100 feet underground, but that would make it *pretty* difficult to download files.  
 
 In this guide, I'll cover some increasingly difficult steps that you can take in order to increase your browsing anonymity. Just as a reminder, it is **illegal** to hack, purchase, or exchange illicit information and using the following techniques will not prevent you from being caught. I am not yet a professional, just a cyber security enthusiast.
 

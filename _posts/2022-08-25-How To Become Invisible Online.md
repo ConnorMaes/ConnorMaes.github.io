@@ -2,7 +2,7 @@
 
 ## A noob's guide to online privacy
 
-<br>
+<br> 
 
 To keep your data private when browsing the web, there are many different techniques and programs that you can use. However, you'll notice that the more private and anonymous you become, the less convenient it will be for you to browse without your data being leaked. Convenience has always been the opposition of security. The more secure you become, the less convenient it is to go about normal tasks. For instance, the most secure computer is one that is powered off, disconnected from any internet connection, and stored 100 feet underground, but that would make it *pretty* difficult to download files.  
 

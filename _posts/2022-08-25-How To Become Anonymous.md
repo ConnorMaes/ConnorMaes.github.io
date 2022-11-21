@@ -1,4 +1,4 @@
-# How To Become Anonymous
+# Four Varying Levels of Anonymous Browsing 
 
 ## A noob's guide to online privacy
 
@@ -69,7 +69,7 @@ To download TAILS onto a USB, go to https://tails.boum.org/ to get started. TAIL
 
 <br>
 
-### **4. Now that you are anonymous, you are a new person.**
+### **4.  Use new accounts and develope different browsing habits**
 
 <br>
 
@@ -95,5 +95,6 @@ https://www.whatismyip.com/are-proxies-safe/
 https://www.expressvpn.com/vpn-service/tor-vpn
 https://pentestlab.blog/2013/02/25/common-virtualization-vulnerabilities-and-how-to-mitigate-risks/
 https://tails.boum.org/contribute/design/memory_erasure/
+
 Book: The Art of Invisibility: The World's Most Famous Hacker Teaches You How to Be Safe in the Age of Big Brother and Big Data 
 

@@ -1,6 +1,6 @@
 # Four Varying Levels of Anonymous Browsing 
 
-## A noob's guide to online privacy
+## A beginner's guide to browsing anonymously.
 
 <br> 
 

@@ -1,5 +1,7 @@
-2022-12-09-Flipper Zero Penetration Testing
+# Flipper Zero Penetration Testing
+<br>
 
+## What I learned in a month of penetration testing with my Flipper Zero
 
 Having a Flipper Zero has taught me what 'hidden' technologies I interact with on a daily basis. I've learned so much about physical penetration testing through the use of Flipper Zero, including NFC hacking, WiFi hacking, RFID hacking, and more! I figured I'd share a short post about everything I've learned in the last month through my new educational hacking tool.
 

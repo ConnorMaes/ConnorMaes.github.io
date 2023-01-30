@@ -30,7 +30,7 @@ Day one was mainly about Security Frameworks, which was an excellent introductio
 Day two focused on parsing log files to find meaningful information. This was very hands-on, as it showed how log files are stored in a Linux machine and how to search for the logs you want using commands like the following:
 
 
-```
+``` BASH
 cd var/log
 ls -lah
 grep -i “tryhackme” log.txt
@@ -49,7 +49,7 @@ Through the activity, I found the associated log files for the day of an intrusi
 
 Day three was one I particularly enjoyed, as it showed how hackers use open-sourced intelligence to their advantage. There is so much publicly available information on the internet, and they showed a few ways to obtain it. In this challenge, I used Google Dorks to find results that aren't usually displayed using regular search terms:
 
-```
+``` bash
 inurl:hacking
 filetype:pdf “hacking”
 site:tryhackme.com
@@ -71,6 +71,7 @@ Day four was a repeat of information for me, but good information nonetheless! T
 Network Scanning, Port Scanning, and Vulnerability Scanning were all briefly explained. For this challenge, I used Nmap to find a vulnerable Apache server running on a host. I then used Nikto which is an open-source software that scans websites for vulnerabilities.
 
 **Tools Used**
+
 - **Nmap**: To find a vulnerable Apache server running on a host
 - **Nikto**: An open-source software that scans websites for vulnerabilities
 
@@ -98,12 +99,12 @@ Day 6 was interesting as it showed how to perform some manual email analysis. Ty
 
 They explained the structure of an email header and what to look for in a quick analysis. This included the following questions:
 
-    Do the "From", "To", and "CC" fields contain valid addresses?
-    Are the "From" and "To" fields the same?
-    Are the "From" and "Return-Path" fields the same?
-    Does the "Message-ID" field exist and is it valid?
-    Do the hyperlinks redirect to suspicious/abnormal sites?
-    Do the attachments consist of or contain malware?
+* Do the "From", "To", and "CC" fields contain valid addresses?
+* Are the "From" and "To" fields the same?
+* Are the "From" and "Return-Path" fields the same?
+* Does the "Message-ID" field exist and is it valid?
+* Do the hyperlinks redirect to suspicious/abnormal sites?
+* Do the attachments consist of or contain malware?
 
 
 In the challenge, I used "emlAnalyzer" to view the body of an email and analyze the attachments. The command looked like this:
@@ -158,8 +159,8 @@ Smart contracts are vulnerable to issues such as logic problems and inadequate e
 
 As an example, the conditions for the withdraw function are:
 
-    1. Balance is greater than zero
-    2. Send Ethereum
+1. Balance is greater than zero
+2. Send Ethereum
 
 At first glance, this may seem secure. However, when is the amount to be sent subtracted from the balance? According to the contract diagram, the balance is only reduced after Ethereum has been sent. This could pose a problem because the function should complete before any other functions can be processed. However, it is possible for a contract to make consecutive calls to a function while the previous call is still executing. In this case, an attacker could continuously call the withdraw function before it can clear the balance, meaning the conditions outlined above would always be met. To prevent this, the function logic must be changed to remove the balance before another call can be made, or stricter requirements must be implemented.
 
@@ -269,7 +270,7 @@ Day fifteen was one of my personal favorites as it focused on Unrestricted File 
 
 In this task, I used a C# file upload as the case study. C# is a popular language used to create both Windows application and web applications at large organisations.
 
- I looked at a simple website that had the ability for the user to upload a resume to the website. However, it wasn’t just allowing resumes, it was allowing all file types to be uploaded! This vulnerability can lead to some series cross-site scripting (XSS) or cross-site request forgery (CSRF). A bad adversary can ultimately use this to take control of the entire web server! This is why input validation is extremely important for file upload web services.
+I looked at a simple website that had the ability for the user to upload a resume to the website. However, it wasn’t just allowing resumes, it was allowing all file types to be uploaded! This vulnerability can lead to some series cross-site scripting (XSS) or cross-site request forgery (CSRF). A bad adversary can ultimately use this to take control of the entire web server! This is why input validation is extremely important for file upload web services.
 
 <br>
 
@@ -277,7 +278,7 @@ In this task, I used a C# file upload as the case study. C# is a popular languag
 
 To validate the user input for the challenge, I needed to make sure that the file uploaded was a PDF as that is the only allowed file type. 
 
-```
+```C#
 string contentExtension = Path.GetExtension(fileUpload);
 if !(contentExtension.equals("PDF"))
     {
@@ -287,7 +288,7 @@ if !(contentExtension.equals("PDF"))
 
 Then, once the extension of the file is verified as a PDF, the file size should also be validated. This is because the webservice could be intentionally slowed or even disrupted if someone were to try and upload PDFs that were far too large for the webserver.
          
-```
+```C#
 int contentSize = fileUpload.ContentLength;
 //10Mb max file size
 int maxFileSize = 10 * 1024 * 1024
@@ -299,12 +300,13 @@ if (contentSize > maxFileSize)
 
 Once the size is verified to be under the maximum limit, the file needs to be renamed. Even though the uploads are stored outside the web root, an attacker could use a file inclusion vulnerability to execute a file. Therefore the uploaded file must be randomly named to prevent a bad advisory from being able to reference or recover their file.
    
-```
+```C#
 Guid id = Guid.NewGuid();
 var filePath = Path.Combine(fullPath, id + ".pdf");
 ```
 Lastly, the file should still be scanned for malware. Even though the file can be a PDF under the specified file size, it can still contain malicious content for PDF readers. This is why the files must always be scanned for malware as well.
-```
+
+```C#
 var clam = new ClamClient(this._configuration["ClamAVServer:URL"],Convert.ToInt32(this._configuration["ClamAVServer:Port"])); 
 var scanResult = await clam.SendAndScanFileAsync(fileBytes);  
   
@@ -328,13 +330,13 @@ Day sixteen was another one of my favorites from the Advent of Cyber. Like the p
 In the challenge, I learned that it’s best to change the any input into the desired data type needed right away. For example, I changed the first input to an integer using the intval() function as a number is needed for the input. This will prevent an injection of SQL code from running as well since the intval() function will immediately convert any string to 0. 
 I changed:
 
-```
+``` PHP
 $query="select * from users where id=".$_GET['id'];
 ```
 
 To the following:
 
-```
+``` PHP
 $query="select * from users where id=".intval($_GET['id']);
 ```
 
@@ -342,14 +344,14 @@ Forcing the input of the SQLi into a string will prevent it from running, but it
 
 For example, this code was first expected to take a single SQL query string which would be vulnerable to SQLi. 
 
-```
+``` PHP
 $q = "%".$_GET['q']."%";
 mysqli_stmt_bind_param($stmt, 'ss', $q, $q);
 ```
 
 It was then turned into the following prepared statement, shown by $query.
 
-```
+``` PHP
 $q = "%".$_GET['q']."%";
 $query="select * from toys where name like ? or description like ?";
 $stmt = mysqli_prepare($db, $query);
@@ -395,21 +397,21 @@ After learning a little bit more about regex filters, I was able to find the fla
 
 Filtering for Usernames:
 
-```
+``` bash
 Egrep ‘^[a-zA-Z0-9](6,12)$’ strings
-```
+``` 
 
 
 Filtering for Emails:
 
-```
+```bash
 Egrep ‘^.+@.+\.com$’ strings
 ```
 
 
 Filtering for URLs:
 
-```
+```bash
 Egrep ‘^http(s)?.{3}(www)?.+\..+$’ strings
 ```
 
@@ -443,7 +445,7 @@ Each rule needs the following variables filled out in order to work.
 
 Here is an example of a Sigma Rule after it has been created.
 
-```
+``` SIGMA
 title: Suspicious Local Account Creation
 id: 0f06a3a5-6a09-413f-8743-e6cf35561297 
 status: experimental
@@ -548,21 +550,21 @@ The challenge then walks through how to exploit a webcam using the mosquito_sub 
 * Verify that MACHINE_IP is an MQTT endpoint and uses the expected port with Nmap.
 * Use mosquitto_sub to subscribe to the device/init topic to enumerate the device and obtain the device ID.
 * Start an RTSP server using rtsp-simple-server
-```
+``` bash
 docker run --rm -it --network=host aler9/rtsp-simple-server
 ```
 Note the port number for RTSP; we will use this in the URL you send in your payload.
 
 If you are having issues receiving a connection and are confident that your formatting is correct, you can attempt to use a TCP listener:
 
-```
+``` bash
 sudo docker run --rm -it -e RTSP_PROTOCOLS=tcp -p 8554:8554 -p 1935:1935 -p 8888:8888 aler9/rtsp-simple-server
 ```
 * Use mosquitto_pub to publish your payload to the device/<id>/cmd topic.
         Recall that your URL must use the attackbox IP address or respective interface address if you are using the VPN and be in the format of rtsp://xxx.xxx.xxx.xxx:8554/path
         If the message was correctly interpreted and the RTSP stream was redirected the server should show a successful connection and may output warnings from dropped packets.
 * You can view what is being sent to the server by running VLC and opening the server path of the locally hosted RTSP server.
-```
+``` bash
 vlc rtsp://127.0.0.1:8554/path
 ```
 If you are using Kali, you must download VLC from the snap package manager to ensure the proper codecs are installed.
@@ -607,11 +609,11 @@ Overall, these steps serve as a reminder of how knowledge of hacking can be used
 
 Day twenty-three was the last day of the Advent of Cyber. It focused on reinforcing the defensive mindset necessary for protecting against cyber attacks. The concepts discussed included:
 
-    Layering defenses
-    Reducing attack surfaces
-    Writing secure code
-    Analyzing different parts of the attack chain
-    Practicing defense in depth
+* Layering defenses
+* Reducing attack surfaces
+* Writing secure code
+* Analyzing different parts of the attack chain
+* Practicing defense in depth
 
 “The core mindset that Defense in Depth is founded on is the idea that there is no such thing as a silver bullet that would defeat all of an organization’s security woes. No single defense mechanism can protect you from the bad world out there.”
 

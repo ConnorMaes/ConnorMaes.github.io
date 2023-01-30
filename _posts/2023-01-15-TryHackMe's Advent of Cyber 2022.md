@@ -70,7 +70,7 @@ Day four was a repeat of information for me, but good information nonetheless! T
 
 Network Scanning, Port Scanning, and Vulnerability Scanning were all briefly explained. For this challenge, I used Nmap to find a vulnerable Apache server running on a host. I then used Nikto which is an open-source software that scans websites for vulnerabilities.
 
-### **Tools Used**
+**Tools Used**
 - **Nmap**: To find a vulnerable Apache server running on a host
 - **Nikto**: An open-source software that scans websites for vulnerabilities
 

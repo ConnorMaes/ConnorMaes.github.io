@@ -70,7 +70,7 @@ Day four was a repeat of information for me, but good information nonetheless! T
 
 Network Scanning, Port Scanning, and Vulnerability Scanning were all briefly explained. For this challenge, I used Nmap to find a vulnerable Apache server running on a host. I then used Nikto which is an open-source software that scans websites for vulnerabilities.
 
-### **Tools Used**
+**Tools Used**
 - **Nmap**: To find a vulnerable Apache server running on a host
 - **Nikto**: An open-source software that scans websites for vulnerabilities
 
@@ -111,15 +111,16 @@ In the challenge, I used "emlAnalyzer" to view the body of an email and analyze 
 emlAnalyzer -i Urgent\:.eml --header --html -u --text --extract-all
 ‘
 I also learned to use https://emailrep.io/ in order to investigate the sender of the email. Lastly, I used VirusTotal to analyze the hash of a malicious attachment. TryHackMe also gave a plethora of useful resources when doing malware analysis. Here was the following table provided:
-| Tool         | Purpose                                                                                                                        |
-|--------------|-------------------------------------------------------------------------------------------------------------------------------|
-| VirusTotal   | A service that provides a cloud-based detection toolset and sandbox environment.                                             |
-| InQuest      | A service provides network and file analysis by using threat analytics.                                                        |
-| IPinfo.io    | A service that provides detailed information about an IP address by focusing on geolocation data and service provider.          |
-| Talos Reputation | An IP reputation check service provided by Cisco Talos.                                                                     |
-| Urlscan.io   | A service that analyses websites by simulating regular user behavior.                                                           |
-| Browserling  | A browser sandbox used to test suspicious/malicious links.                                                                     |
-| Wannabrowser | A browser sandbox used to test suspicious/malicious links.                                                                     |
+
+| Tools | Purpose |
+| --- | --- |
+| VirusTotal   | A service that provides a cloud-based detection toolset and sandbox environment.|
+| InQuest      | A service provides network and file analysis by using threat analytics.|
+| IPinfo.io    | A service that provides detailed information about an IP address by focusing on geolocation data and service provider.|
+| Talos Reputation | An IP reputation check service provided by Cisco Talos.|
+| Urlscan.io   | A service that analyses websites by simulating regular user behavior.|
+| Browserling  | A browser sandbox used to test suspicious/malicious links.|
+| Wannabrowser | A browser sandbox used to test suspicious/malicious links.|
 
 
 <br>

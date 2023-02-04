@@ -26,9 +26,10 @@ Setting up Active Directory (AD) involves installing the necessary software on a
 
     5. Domain join your computers. 
 
-    5. Assign permissions and access control to AD resources.
+    5. Assign permissions and access control to AD resources through the use of GPOs.
 
 Please note that this is a basic overview and further steps and considerations may apply depending on the size and complexity of an organization's environment.
+For my Windows Server VM, I'll be using my home lab's server which is running Proxmox (https://www.proxmox.com/en/) to handle the VMs. For easy access to the server, I'll be using RDP with local authentication for GUI access.
 
 <br>
 
@@ -40,37 +41,48 @@ Please note that this is a basic overview and further steps and considerations m
 
 <br>
 
-For my Windows Server VM, I'll be using my home lab's server which is running Proxmox (https://www.proxmox.com/en/) to handle the VMs. For easy access to the server, I'll be using RDP with local authentication for GUI access.
+You'll need to start by setting up your Windows Server Machine, whether it's an actual server in your house or VM is up to you. An ISO for any version of Windows Server can be obtained from the following microsoft link: 
 
-* To do this, start with opening Server Manager, although most windows servers will automatically start this when installed and booted up. 
-* Then click on "Add Roles and Features".
+https://www.microsoft.com/en-us/evalcenter/download-windows-server-2019
+
+Once your Windows Server OS has been installed and booted, you can then follow the steps below to install Active Directory Domain Services (ADDS).
+
+* Start by opening Server Manager although most versions of Windows Server will automatically start this when booted up. 
+* Click on "Add Roles and Features".
 * A wizard will start that will guide you through the process. You can click on "Next" for the "Before You Begin" page.
 * Next, choose your Installation Type. This can be Role-based or feature-based installation. For my case, I will be using a Role-based or feature-based installation. Click "Next".
-* Then select the destination server. In my case, it showed up as YOSHI SERVER as that's what I renamed the windows server box to. Click "Next".
+* Select the destination server. In my case, it showed up as YOSHI SERVER as that's what I renamed the windows server box to. Click "Next".
 * Then you will select the Server Roles. This is where you will see a list of many roles. For my case, I will be selecting the following as this will be used for various projects.
     * Active Directory Domain Services
     * DHCP Server 
     * DNS Server 
     * File and Storage Services > Storage Services
     * File and Storage Services > File and iSCSI Services > File Server
-DHCP and DNS aren't typically installed on your domain controller, but since I will be using this for various projects, I decided to select them. I'll also be hosting a file server on this domain controller for the latter reasons.
+DHCP and DNS aren't typically installed on a company's domain controller, but since I will be using this for various projects, I decided to select them.
 * Once those roles have been selected, click "Next".
 * On the Select Features page, click "Next" to lead you to the AD DS page.
-* Then click "Next" on the AD DS page.
+* Click "Next" again on the AD DS page.
 * Finally, click "Install" to begin installing your selected roles.
 * Once it is done installing, click "Close".
 
+Luckily the installation wizard makes the first step very simple. Another way is to use the following PowerShell command obtained from learn.microsoft.com:
+``` PowerShell
+Install-WindowsFeature -Name AD-Domain-Services -IncludeManagementTools
+```
+
 <br>
 
-## **2. Promote Windows Server to a Domain Controller.**
+<br>
+
+## **2. Create your root domain and promote Windows Server to a Domain Controller.**
 
 <br>
 
-After installing AD DS and any other roles desired, the Windows Server may require a reboot. Once rebooted if necessary, the server can be promoted to a Domain Controller.
+After installing AD DS and any other roles desired, the Windows Server will require a reboot. Once rebooted the root domain can be created and the server can be promoted to a Domain Controller. For my root domain, I'll be using yoshi.local. "Yoshi" because that's my dogs name and "local" because it's only going to be used for home lab purposes. You can make your root domain anything you'd like if you’re using it for home lab purposes, but I'd stick to something that looks like a fully qualified domain name (FQDN) for simplicity.
 
 * To do this, click "Manage" in the top right corner of Server Manager.
-* Then click "Promote this server to a domain controller". This will  open the AD DS Configuration Wizard. 
-* Here, I will be selecting add a new forest, and I will be using yoshi.lol as the root domain name. If using AD DS for a local network home lab, you can use anything for the root domain name. Click "Next".
+* Click "Promote this server to a domain controller". This will  open the AD DS Configuration Wizard. 
+* Here, I will be selecting "add a new forest", and I will be using yoshi.lol as the root domain name. Click "Next".
 * On the Domain Controller Options page, leave the default configuration and input your password. Then select "Next".
 * On the next page, DNS Options, you will likely see an error. Ignore it and click “Next“.
 * Then choose your NetBIOS Domain Name, or leave it as what is already listed there. In my case it was "yoshi" as the root domain is yoshi.lol. Click "Next".
@@ -79,24 +91,59 @@ After installing AD DS and any other roles desired, the Windows Server may requi
 * In the next step, prerequisites will need to be validated before AD DS is installed. If there are any errors in your previous steps, this page will show you where and you'll need to fix it. Click "Install".
 * Once it is completed installing, the server will reboot and you can log into the domain with the credentials that you set up in the previous steps.
 
+I prefer to do this through the Server Manager as I've done it before, but there are PowerShell scripts that can promote Windows Server to a Domain Controller.
+``` PowerShell
+$Domain = Read-Host "Enter the domain name in which the forest will be created (e.g. testdomain.local or google.com)"
+$NetbiosName = Read-Host "Enter the net bios name for your domain (e.g. 'TestDomain' or 'Yoshi')"
+$safeModeAdminPassword = Read-Host "Enter your Domain Controller's password" -AsPlainText -Force
+
+Install-ADDSForest `
+    -CreateDnsDelegation:$false `
+    -DatabasePath "C:\Windows\NTDS" `
+    -DomainMode "Win2016" `
+    -DomainName $Domain `
+    -DomainNetbiosName $NetbiosName `
+    -ForestMode "Win2016" `
+    -InstallDns:$true `
+    -LogPath "C:\Windows\NTDS" `
+    -NoRebootOnCompletion:$false `
+    -SysvolPath "C:\Windows\SYSVOL" `
+    -Force:$true `
+    -SafeModeAdministratorPassword $safeModeAdminPassword
+```
+
+This script assumes how you would like to install the ADDS Forest. This is the only script I did not test as I promoted Windows Server to a Domain Controller through the Server Manager before attempting this. I'll need to double-check it once I create my single AD creation script in a future blog post!
+
+<br>
+
 <br>
 
 ## **3. Configure the AD forest and domain structure.** 
 
 <br>
 
-* First, I'll take a look at the default schema that is currently set up. In the windows start menu, go to the Windows Start Menu in the bottem left of the screen or by clicking the windows key. 
+This step is highly repeatative and customizable which will make a great PowerShell script. However, I'll first explain how to do it through the Windows Server GUI. Lets first take a look at the default schema that is currently set up.
+
+*  In the windows start menu, go to the Windows Start Menu in the bottem left of the screen or by clicking the windows key. 
 * Then select the "Windows Administrative Tools" Folder.
-* Select "Active Directory Users and Computers".
-* Under your root domain, you can see the default setup. Although there is a Users folder, we will create our own Organizational Unit, or folder for our users to make organizing our own users easier. To do this, go to select your root domain. Go to "Actions", then "New >", and then select Organization Unit (OU). 
+* Select "Active Directory Users and Computers", also known as ADUC.
+    
+    Under your root domain, you can see the default setup. Although there is a Users folder, we will create our own Organizational Unit, or folder, for our users. 
+
+    This is typically recommended for building out actual domains, and we want to hit relatively close to reality for our homelab.
+*  To do this, go to select your root domain. Go to "Actions", then "New >", and then select Organization Unit (OU). 
 * Name your OU. In my case, I named it "Yoshi Users" to differentiate it from the default "Users" folder.
-* Create an OU for computers as well as it's best practice to have a seperate OU for computers.
+* Repeat this process for the domain's Computers OU.
+    
+    Note: These two OUs will need to be redirected as the default Users and Computers OU. This is easier to do in PowerShell using the redircmp and redirusr commands. To use these you'll need to know the *distinguished name* of your new Users and Computers OU which can be found in the properties of those OUs.
+
+
 
 <br>
 
-Now that I showed how to create OUs to build out the domain structure, lets dive into some PowerShell scripts that can help with the creation of your AD forest.
+Now that we understand how to create OUs, lets dive into some PowerShell scripts that can help with the creation of basic enterprise AD forest.
 
-The most simple is a script that will ask for OU name and path and create it for you.
+The most simple is the following script that will ask for OU name and distinguished name, or path, and create it for you.
 ``` PS
 $Name = Read-Host "Enter the name of the OU"
 $Path = Read-Host "Enter the path for the OU (e.g. 'OU=TestOU,DC=domain,DC=com')"
@@ -105,9 +152,7 @@ New-ADOrganizationalUnit -Name $Name -Path $Path
 This is a nice simple use case for a single OU, but when AD is first installed, it'd be nice to have a PowerShell script that creates a basic forest that uses some best practices. Some best practices include having a Groups OU for permissions and separating Users and Computers OUs.
 
 ``` PowerShell
-Import-Module ActiveDirectory
-
-#Obtain Domain Info
+#Obtain domain and distinguished name info
 
 $Domain = Read-Host "Enter the fully qualified domain name (FQDN) of the domain in which the forest will be created (e.g. yoshi.local):"
 $FQDN = [System.Net.Dns]::GetHostByName($Domain).HostName
@@ -194,7 +239,9 @@ else {
  
 <br>
 
-This will be done through the Active Directory Users and Computers, which was accessed in the previous step. You can also access this by going to the "Tools" tab in the Server Manager. It's important to use a standardized naming convention for your users' usernames. For instance, a popular naming convention would be "john.doe" for someone named John Doe.
+This will be done through the Active Directory Users and Computers (ADUC), which was accessed in the previous step. You can also access this by going to the "Tools" tab in the Server Manager. 
+
+It's important to use a standardized naming convention for your users' usernames. For instance, a popular naming convention would be "john.doe" for someone named John Doe.
 
 * In Active Directory Users and Computers, select your new OU for Users. In my instance, this is Yoshi Users.
 * Go to Action > New > User.
@@ -218,7 +265,7 @@ Note: Replace "domain.com" with your actual domain name and adjust the -Path par
 
 <br>
 
-However, since I am creating this AD forest for continous use, I'll need a way to create a large amount of users at once. For this, I've made a PowerShell script that can do exactly that with the input of a single password, each end-user's full name, and the destination for these users. However, this will only create bulk users for a specified destination.
+However, since I am creating this AD forest for homelab use, I'll need a way to create a large amount of users at once. For this, I've made a PowerShell script that can do exactly that with the input of a single password, each end-user's full name, and the destination for these users. Unfortunately, this will only create bulk users for a specified destination.
 
 ``` PowerShell
 Import-Module ActiveDirectory
@@ -364,7 +411,7 @@ Since I used an old VM to domain join, I wasn't able to join it during the insta
 
 <br>
 
-In this step, there are many GPOs that are good to use for best practice, but I'll just be showing the GPO that will block PowerShell to any linked-OUs. Other GPOs that are common are as follows:
+There are many GPOs that are good to use for best practice. For this step, I'll just be showing the GPO that will block PowerShell to any linked-OUs. Other GPOs that are common are as follows:
 
 * Prevent access to the command prompt
 * Deny all removable storage access
@@ -378,26 +425,29 @@ In this step, there are many GPOs that are good to use for best practice, but I'
 
 **How to create a GPO that prevents users from using PowerShell:**
 
-* Right-click the OU you wish to create a GPO for and select "Create a GPO in this domain, and Link it here..." or if you wish to link it later go to the "Group Policy Objects" OU and right click and select "New".
-* Give the GPO a name. Try to be very descriptive. I'll name it  Now you'll need to edit the settings.
-* Right click the newly created GPO and select "Edit". This is where you'll add the specific rule for a GPO. In this instance, we'll be created a GPO that blocks PowerShell for linked OUs.
+* Go to the "Group Policy Management" tool in Windows Server.
+    This should look very familiar to ADUC but with the addition of a few new OUs.
+* Select the "Group Policy Objects" OU, right click, and select "New".
+    * Alternatively, Right-click the OU you wish to create a GPO for and select "Create a GPO in this domain, and Link it here..."
+* Give the GPO a name and click "Ok". Try to be very descriptive. I'll name mine "User - Disable PowerShell".
+* Right click the newly created GPO and select "Edit". This is where we'll add the specific rule for a GPO.
 * Navigate to User Configuration > Policies > Windows Settings > Security Settings > Software Restrictrion Policies > Additional Rules
 * Now, right-click "Software Restriction Policies" and select "New Software Restriction Policies".
 * Select "Additional Rules", then right-click and select "New Path Rule".
-* Now you'll need to input the location of powershell.exe in the "Path" field. The most common path for PowerShell is C:\Windows\System32\WindowsPowerShell\v1.0.
-* Set the "Security Level" to “Disallowed” Click OK.
+* Now you'll need to input the location of powershell.exe in the "Path" field. The most common path for PowerShell is C:\Windows\System32\WindowsPowerShell\v1.0 but it can also be found using Task Manager.
+* Set the "Security Level" to “Disallowed”. Click OK.
     * Now, if you still need to link the GPO, navigate back to the Group Policy Management tool.
     * Right-Click the OU you wish to apply the GPO to and select "Link an existing GPO...". 
     * Select your newly created and edited GPO and click "Ok". 
 
-Here's the script that will have the same effect, but do it by editing registry keys:
+It turns out creating GPOs via PowerShell doesn't really exit as PowerShell lacks the commands to do so. You can make PowerShell scripts create GPOs that edit registry keys, but it's not recommended since editing registry keys can be very damaging to a system if you're not sure what you're doing. Here's the script that will have the same effect, but do it by editing registry keys:
 
 ``` PowerShell
 New-GPO -Name "Prevent PowerShell Usage"
 Set-GPRegistryValue -Name "Prevent PowerShell Usage" -Key "HKCU\Software\Microsoft\Windows\CurrentVersion\Policies\System" -ValueName "ExecutionPolicy" -Restricted
 ```
+I'll look forward to the day in which I can create GPOs through PowerShell scripts without having to edit registry keys, but that seems too convenient for hackers. I guess key registry or manual input will have to do for now...
 
-It turns out creating GPOs via PowerShell doesn't really exit as PowerShell lacks the commands to do so. You can make PowerShell scripts create GPOs that edit registry keys, but it's not recommended since editing registry keys can be very damaging to a system if you're not sure what you're doing.
 
 <br>
 

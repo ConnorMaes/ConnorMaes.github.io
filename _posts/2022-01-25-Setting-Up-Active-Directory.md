@@ -81,7 +81,7 @@ After installing AD DS and any other roles desired, the Windows Server may requi
 
 <br>
 
-## **3. Configure the AD forest and domain structure, including creating additional domains and subdomains if needed.** 
+## **3. Configure the AD forest and domain structure.** 
 
 <br>
 

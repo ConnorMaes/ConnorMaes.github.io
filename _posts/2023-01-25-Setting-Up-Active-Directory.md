@@ -20,17 +20,17 @@ In this tutorial, I'll be using Active Directory to get familiar with PowerShell
 
 Setting up Active Directory (AD) involves installing the necessary software on a server, configuring the AD forest and domain structure, and creating and managing user and computer accounts. Here is a high-level overview of the process:
 
-    1. Install the Active Directory Domain Services (AD DS) role on a server running Windows Server operating system.
+1. Install the Active Directory Domain Services (AD DS) role on a server running Windows Server operating system.
 
-    2. Promote the server to a domain controller by running the Active Directory Domain Services Configuration Wizard. This will create the initial AD forest and domain.
+2. Promote the server to a domain controller by running the Active Directory Domain Services Configuration Wizard. This will create the initial AD forest and domain.
 
-    3. Configure the AD forest and domain structure.
+3. Configure the AD forest and domain structure.
 
-    4. Create AD users.
+4. Create AD users.
 
-    5. Domain join your computers. 
+5. Domain join your computers. 
 
-    5. Assign permissions and access control to AD resources through the use of GPOs.
+6. Assign permissions and access control to AD resources through the use of GPOs.
 
 Please note that this is a basic overview and further steps and considerations may apply depending on the size and complexity of an organization's environment.
 For my Windows Server VM, I'll be using my home lab's server which is running Proxmox (https://www.proxmox.com/en/) to handle the VMs. For easy access to the server, I'll be using RDP with local authentication for GUI access.

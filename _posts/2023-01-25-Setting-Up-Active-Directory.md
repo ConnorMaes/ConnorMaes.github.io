@@ -4,7 +4,11 @@
 
 <br>
 
-### I've been getting a lot of interview questions about Active Directory (AD) in my job search and while I've set it up before, it's been a while. This time I'll be using Active Directory to get familiar with PowerShell scripting in the later steps. Eventually, I'd like to create a *single* PowerShell script that creates a practical AD forest to use for penetration testing. Let's see how close I can get to that throughout this AD setup.
+### Structure is essential for securing data. Active Directory provides just that, offering a centralized management system for the majority of businesses in the U.S. By using systems like Active Directory, companies can steer clear of the headaches caused by disorganization, shadow IT, and security threats that can compromise their computer systems.
+
+<br>
+
+In this tutorial, I'll be using Active Directory to get familiar with PowerShell scripting. Eventually, I'd like to create a *single* PowerShell script that creates a practical AD forest to use for penetration testing. 
 
 <br>
 
